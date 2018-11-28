@@ -3,26 +3,39 @@ import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 
-import { ItemDetailsPage } from '../pages/item-details/item-details';
-import { ListPage } from '../pages/list/list';
-
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { HomePageModule } from '../pages/home/home.module';
+import { ListPage } from '../pages/list/list';
+import { MapPageModule } from '../pages/map/map.module';
+import { UserProfilePageModule } from '../pages/user/user-profile/user-profile.module';
+import { UserFavoriteLocalPageModule } from '../pages/user/user-favorite-local/user-favorite-local.module';
+import { ManageLocalPageModule } from '../pages/manager/list-manage-local/manage-local.module';
+import { LocalProfilePageModule } from '../pages/local-profile/local-profile.module';
+import { HomePage } from '../pages/home/home';
+import { TabsPageModule } from '../pages/tabs/tabs.module';
+
+
 
 @NgModule({
   declarations: [
     MyApp,
-    ItemDetailsPage,
     ListPage
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp),
+    HomePageModule,
+    TabsPageModule,
+    MapPageModule,
+    UserProfilePageModule,
+    UserFavoriteLocalPageModule,
+    ManageLocalPageModule,
+    LocalProfilePageModule,
+    IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    ItemDetailsPage,
     ListPage
   ],
   providers: [
