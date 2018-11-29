@@ -1,14 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
-
 import { Platform, MenuController, Nav } from 'ionic-angular';
-
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { HomePage } from '../pages/home/home';
 import { UserFavoriteLocalPage } from '../pages/user/user-favorite-local/user-favorite-local';
 import { UserProfilePage } from '../pages/user/user-profile/user-profile';
 import { TabsPage } from '../pages/tabs/tabs';
-
 
 @Component({
   templateUrl: 'app.html'

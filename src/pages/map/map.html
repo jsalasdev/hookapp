@@ -1,15 +1,8 @@
-<ion-header>
+<div *ngIf="showSearchBar">
+    <ion-searchbar #bar [(ngModel)]="searchTerm" placeholder="Buscar" (change)="getTerms()">
+    </ion-searchbar>
+</div>
 
-    <ion-navbar>
-        <button ion-button menuToggle>
-            <ion-icon name="menu"></ion-icon>
-        </button>
-        <ion-title>Localizador de locales</ion-title>
-    </ion-navbar>
-
-</ion-header>
-
-
-<ion-content padding>
-
-</ion-content>
+<agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
+    <!-- <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker> -->
+</agm-map>
