@@ -2,16 +2,17 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/cor
 import { IonicPageModule } from 'ionic-angular';
 import { MapPage } from './map';
 import { AgmCoreModule } from '@agm/core';
+import { Geolocation } from '@ionic-native/geolocation';
 
 @NgModule({
   declarations: [
     MapPage,
   ],
   imports: [
-    IonicPageModule.forChild(MapPage),
-    AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyAoSnKhTIGHcZBk023jWh5ZwrOEsbafBRg'
-    }),
+    IonicPageModule.forChild(MapPage)
+  ],
+  providers: [
+    Geolocation
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })
