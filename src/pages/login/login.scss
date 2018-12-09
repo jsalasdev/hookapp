@@ -1,0 +1,29 @@
+page-login {
+    .bgstyle {
+        background: #fcba04;
+    }
+    .scroll-content {
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        position: absolute;
+        z-index: 1;
+        display: block;
+        overflow-x: unset;
+        overflow-y: unset;
+        -webkit-overflow-scrolling: touch;
+        will-change: scroll-position;
+        contain: size style layout;
+    }
+    body,
+    h1,
+    h4 {
+        color: white;
+        text-align: center;
+    }
+    ion-grid {
+        height: 100%;
+        justify-content: center;
+    }
+}

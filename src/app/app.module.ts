@@ -3,6 +3,8 @@ import { NgModule, ErrorHandler, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 
+import {IonicStorageModule} from '@ionic/storage';
+
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { HomePageModule } from '../pages/home/home.module';
@@ -13,7 +15,9 @@ import { UserFavoriteLocalPageModule } from '../pages/user/user-favorite-local/u
 import { ManageLocalPageModule } from '../pages/manager/list-manage-local/manage-local.module';
 import { LocalProfilePageModule } from '../pages/local-profile/local-profile.module';
 import { TabsPageModule } from '../pages/tabs/tabs.module';
-
+import { IntroPageModule } from '../pages/intro/intro.module';
+import { LoginPageModule } from '../pages/login/login.module';
+import { Facebook } from '@ionic-native/facebook';
 
 
 @NgModule({
@@ -30,6 +34,9 @@ import { TabsPageModule } from '../pages/tabs/tabs.module';
     UserFavoriteLocalPageModule,
     ManageLocalPageModule,
     LocalProfilePageModule,
+    IntroPageModule,
+    LoginPageModule,
+    IonicStorageModule.forRoot(),
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
@@ -40,6 +47,7 @@ import { TabsPageModule } from '../pages/tabs/tabs.module';
   providers: [
     StatusBar,
     SplashScreen,
+    Facebook,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
