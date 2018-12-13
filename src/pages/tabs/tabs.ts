@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { IonicPage, NavController, NavParams, MenuController, Tabs } from 'ionic-angular';
 import { HomePage } from '../home/home';
 import { MapPage } from '../map/map';
+import { ManageLocalPage } from '../manager/list-manage-local/manage-local';
 
 /**
  * Generated class for the TabsPage page.
@@ -20,11 +21,21 @@ export class TabsPage {
   tab1Root: any = HomePage;
   tab2Root: any = MapPage;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  @ViewChild('myTabs') tabRef: Tabs;
+
+  index:number;
+
+  constructor(public navCtrl: NavController, public navParams: NavParams,
+    private menu: MenuController) {
+      this.menu.enable(true);
+      
   }
 
   ionViewDidLoad() {
-    console.log('PAGINA TABS*****');
+    this.index = this.navParams.get('index');
+    if(this.index){
+      this.tabRef.select(this.index);
+    }
   }
 
 }

@@ -1,0 +1,23 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>Seleccionar localización</ion-title>
+    </ion-navbar>
+    <ion-toolbar color="primary">
+        <ion-searchbar [(ngModel)]="autocomplete.input" (ionInput)="updateSearchResults()" placeholder="Buscar"></ion-searchbar>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-list [hidden]="autocompleteItems.length == 0">
+        <ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)">
+            {{ item.description }}
+        </ion-item>
+    </ion-list>
+    <div id="map_canvas">
+    </div>
+</ion-content>
+
+<ion-footer>
+    <button class="geolocation-btn" ion-button full (click)="tryGeolocation()"> BUSCAR EN MI POSICIÓN </button>
+    <button class="save-btn" color="secondary" ion-button full (click)="saveLocation()"> GUARDAR LOCALIZACIÓN </button>
+</ion-footer>

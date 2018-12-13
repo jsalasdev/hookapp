@@ -3,18 +3,27 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
 import { LoadingController } from 'ionic-angular';
 
+/**
+* Generated class for the SelectLocationPage page.
+*
+* See https://ionicframework.com/docs/components/#navigation for more info on
+* Ionic pages and navigation.
+*/
+
 declare var google: any;
 
 @IonicPage()
 @Component({
-  selector: 'page-map',
-  templateUrl: 'map.html',
+  selector: 'page-select-location',
+  templateUrl: 'select-location.html',
 })
-export class MapPage {
+export class SelectLocationPage {
   
+  callback:any;
   
   map: any;
   markers: any;
+  localMarker: any;
   autocomplete: any;
   GoogleAutocomplete: any;
   GooglePlaces: any;
@@ -38,7 +47,9 @@ export class MapPage {
     };
     this.autocompleteItems = [];
     this.markers = [];
+    this.localMarker = undefined;
     this.loading = this.loadingCtrl.create();
+    this.callback = this.navParams.get('callback');
   }
   
   ionViewDidLoad() {
@@ -66,13 +77,8 @@ export class MapPage {
     selectSearchResult(item){
       this.clearMarkers();
       this.autocompleteItems = [];
-      
       this.geocoder.geocode({'placeId': item.place_id}, (results, status) => {
         if(status === 'OK' && results[0]){
-          // let position = {
-          //     lat: results[0].geometry.location.lat,
-          //     lng: results[0].geometry.location.lng
-          // };
           this.addMarkerPosition(results[0].geometry.location);
         }
       })
@@ -96,8 +102,7 @@ export class MapPage {
     }
     
     tryGeolocation(){
-      // this.loading.present();
-      this.clearMarkers();//remove previous markers
+      this.clearMarkers();
       
       this.geolocation.getCurrentPosition().then((resp) => {
         let pos = {
@@ -106,7 +111,6 @@ export class MapPage {
         };
         
         this.addMarkerPosition(pos);
-        // this.loading.dismiss();
         
       }).catch((error) => {
         console.log('Error getting location', error);
@@ -116,21 +120,75 @@ export class MapPage {
     
     clearMarkers(){
       for (var i = 0; i < this.markers.length; i++) {
-        console.log(this.markers[i])
         this.markers[i].setMap(null);
       }
       this.markers = [];
     }
     
     loadMap(){
+      console.log('ENTRA LOAD MAP');
       this.map = new google.maps.Map(document.getElementById('map_canvas'), {
         center: { lat: 39.9998916, lng: -3.302208 },
         disableDefaultUI: true,
-        scrollwheel: false,
-        scaleControl: false,
-        draggable: false,
         zoom: 5.5
-      });  }
+      });  
       
+      this.map.addListener('click', (event) => {
+        let position = new google.maps.LatLng(event.latLng.lat(),event.latLng.lng());
+        if(this.localMarker){
+          this.localMarker.setPosition(position);
+        }else{
+          this.localMarker = new google.maps.Marker({
+            position: position,
+            map: this.map
+          });
+        }
+      });
     }
     
+    saveLocation(){
+      if(this.localMarker!==undefined){
+        let position = this.localMarker.getPosition();
+        this.getLocationData(position, (data) => {
+          data.geometry.latitude = position.lat();
+          data.geometry.longitude = position.lng();
+          this.callback(data).then(() => {
+            this.navCtrl.pop();
+          });
+          
+        });
+      }     
+    }
+    
+    getLocationData(position, callback){
+      let data;
+      this.geocoder.geocode({'location': position}, function(results, status) {
+        if (status === 'OK') {
+          if (results[0]) {
+            data = {              
+              address: results[0].formatted_address,
+              geometry: {
+                latitude: position.lat(),
+                longitude: position.lng()
+              }
+            }
+          } else {
+            data = undefined;
+          }
+        } else {
+          data = undefined;
+        }
+        
+        callback(data);
+      });
+    }
+    
+    
+    // ionViewDidLoad() {
+    //   setTimeout(() => {
+    //     this.callback('test').then(() => { this.navCtrl.pop() });
+    //   },1000);
+    // }
+    
+  }
+  

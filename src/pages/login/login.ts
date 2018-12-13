@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angular';
 import { Facebook, FacebookLoginResponse} from '@ionic-native/facebook';
-
+import { UserProvider } from '../../providers/users/user';
+import { TabsPage } from '../tabs/tabs';
+import { Storage } from '@ionic/storage';
 /**
 * Generated class for the LoginPage page.
 *
@@ -18,7 +20,9 @@ export class LoginPage {
   
   user:any = {};
   
-  constructor(private fb: Facebook, public navCtrl: NavController, public navParams: NavParams) {
+  constructor(private _st: Storage,private fb: Facebook, public navCtrl: NavController, public navParams: NavParams, private _us: UserProvider,
+    private menu: MenuController) {
+      this.menu.enable(false);
   }
   
   ionViewDidLoad() {
@@ -26,11 +30,22 @@ export class LoginPage {
   }
   
   login(){
-    console.log('CLICK LOGIN');
     this.fb.login(['public_profile', 'user_friends','email'])
     .then((res: FacebookLoginResponse) => {
       if(res.status==='connected'){
-        console.log('Conectado.');
+        if(res.authResponse){
+          this._us.loginWithFacebook(res.authResponse.accessToken)
+          .then(resp => {
+            console.log('RESPUESTA LOGIN: ',resp);
+            this._st.set('session', resp.json());
+            this.navCtrl.setRoot(TabsPage);
+          })
+          .catch(err => {
+            console.log('ERROR');
+          });
+        }else{
+          alert('Login failed');  
+        }        
       }else{
         alert('Login failed');
       }      

@@ -1,18 +1,105 @@
-<!--
-  Generated template for the ManageLocalPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>manage-local</ion-title>
-  </ion-navbar>
+    <ion-navbar>
+        <button ion-button menuToggle>
+              <ion-icon name="menu"></ion-icon>
+          </button>
+        <ion-title>Mis locales</ion-title>
+    </ion-navbar>
 
 </ion-header>
+<ion-content overflow-scroll="false">
+    <ion-grid text-center>
+        <ion-row>
+            <ion-col col-12 col-lg-8 offset-lg-2>
+                <ion-segment [(ngModel)]="option">
+                    <ion-segment-button value="mylocals">
+                        <ion-icon name="clipboard"></ion-icon>
+                        <br />
+                        <span>Mis locales</span>
+                    </ion-segment-button>
+
+                    <ion-segment-button value="favoritelocals">
+                        <ion-icon name="star"></ion-icon>
+                        <br />
+                        <span>Locales favoritos</span>
+                    </ion-segment-button>
+                </ion-segment>
+            </ion-col>
+        </ion-row>
+
+        <!-- SECCION MIS LOCALES -->
+        <ion-row>
+            <ion-col col-12 col-lg-8 offset-lg-2 [ngSwitch]="option">
+                <ion-grid *ngSwitchCase="'mylocals'">
+                    <ion-row align-items-center text-center *ngIf="myLocals.length==0">
+                        <ion-col col-12>
+                            <p text-center> No tienes ningún local</p>
+                            <p text-center> ¿Eres gerente de un local y quieres ganar visibilidad?</p>
+
+                            <button ion-button icon-left small color="primary" (click)="openAddContacts()">
+                                <ion-icon name="add"></ion-icon>
+                                Añadir Local
+                            </button>
+                        </ion-col>
+                    </ion-row>
+
+                    <!-- <ion-row class="row-item" *ngIf="myLocals.length>0"> -->
+                    <!-- <ion-scroll style="width:100%;height:100vh" scrollY="true"> -->
+                    <ion-list padding>
+                        <ion-item-sliding *ngFor="let item of myLocals">
+                            <ion-item>
+                                <ion-thumbnail item-start>
+                                    <img [src]="assets/imgs/usuario">
+                                </ion-thumbnail>
+                                <h2>{{item.name}}</h2>
+                                <!-- <h2>{{item.title}}</h2> -->
+                                <p>{{item.locality}} • {{item.createdAt | date:'shortDate'}}</p>
+                                <!-- <p>{{item.place}} • {{item.date}}</p> -->
+                            </ion-item>
+                            <ion-item-options side="right">
+                                <button ion-button color="secondary" (click)="viewComments(item)">
+                                            <ion-icon name="trash"></ion-icon>
+                                            Eliminar
+                                        </button>
+                                <button ion-button color="light" (click)="delete(item)">
+                                            <ion-icon name="create"></ion-icon>
+                                            Editar
+                                        </button>
+                            </ion-item-options>
+                        </ion-item-sliding>
 
 
-<ion-content padding>
+                    </ion-list>
+                    <!-- </ion-scroll> -->
+                    <!-- </ion-row> -->
 
+                </ion-grid>
+            </ion-col>
+        </ion-row>
+
+
+        <!-- SECCION MIS LOCALES FAVORITOS -->
+        <ion-row>
+            <ion-col col-12 col-lg-8 offset-lg-2 [ngSwitch]="option">
+                <ion-grid *ngSwitchCase="'favoritelocals'">
+                    <ion-row align-items-center text-center>
+                        <ion-col col-12>
+                            <p text-center> No tienes ningún local favorito</p>
+                            <p text-center> ¿Quieres ver las novedades de tus locales favoritos?</p>
+
+                            <button ion-button icon-left small color="primary" (click)="openAddContacts()">
+                                        <ion-icon name="add"></ion-icon>
+                                        Añadir Local Favorito
+                                    </button>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+            </ion-col>
+        </ion-row>
+
+    </ion-grid>
 </ion-content>
+<ion-fab right bottom *ngIf="myLocals.length>0">
+    <button (click)="goToCreate()" class="button-fab" ion-fab mini><ion-icon name="add"></ion-icon></button>
+</ion-fab>

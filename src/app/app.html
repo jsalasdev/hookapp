@@ -1,17 +1,38 @@
-<ion-menu [content]="content">
-
-    <!-- <ion-header>
-    <ion-toolbar>
-      <ion-title>Menú</ion-title>
-    </ion-toolbar>
-  </ion-header> -->
+<ion-menu [content]="content" (ionOpen)="menuOpened()" (ionClose)="menuClosed()">
 
     <ion-content>
+
+        <div no-lines class="cont">
+            <ion-avatar item-start>
+                <img src="{{user.picture}}" class="custom-avatar" (click)="editProfileUser(12)" *ngIf="user.picture">
+                <img src="assets/imgs/usuario.png" class="custom-avatar" (click)="editProfileUser(12)" *ngIf="!user.picture" />
+            </ion-avatar>
+        </div>
+        <ion-item no-lines class="user-name">
+            <h2>Bienvenido {{user.firstName}}</h2>
+        </ion-item>
         <ion-list>
             <button ion-item *ngFor="let p of pages" (click)="openPage(p)">
         {{p.title}}
       </button>
         </ion-list>
+
+
+
+        <ion-footer>
+            <ion-list class="log-button">
+                <hr>
+                <ion-item (click)="logout()">
+                    Cerrar sesión
+                </ion-item>
+            </ion-list>
+            <ion-list class="copyright">
+                <ion-item>
+                    Made with <span style="color: #e25555;">&#9829;</span> in Seville
+
+                </ion-item>
+            </ion-list>
+        </ion-footer>
     </ion-content>
 
 </ion-menu>

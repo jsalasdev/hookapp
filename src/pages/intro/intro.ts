@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, Slides } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Slides, MenuController } from 'ionic-angular';
 import { LoginPage } from '../login/login';
 
 /**
@@ -31,7 +31,10 @@ export class IntroPage {
     }
   ];
 
-  constructor(public navCtrl: NavController) { }
+  constructor(public navCtrl: NavController,private menu: MenuController) {
+    this.menu.enable(false);
+   }
+
 
   onSlideChanged() {
     this.slideIndex = this.slider.getActiveIndex();
