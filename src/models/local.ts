@@ -15,6 +15,7 @@ export class Local {
     premiumTobaccoPrice: number
     tobaccoPrice: number
     tobaccos:number[]
+    state:string
     constructor(values: Object = {}) {
         Object.assign(this, values);
     }

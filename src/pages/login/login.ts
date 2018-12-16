@@ -37,7 +37,8 @@ export class LoginPage {
           this._us.loginWithFacebook(res.authResponse.accessToken)
           .then(resp => {
             console.log('RESPUESTA LOGIN: ',resp);
-            this._st.set('session', resp.json());
+            this._st.set('session', JSON.stringify(resp.json()));
+            localStorage.setItem('session', JSON.stringify(resp.json()));
             this.navCtrl.setRoot(TabsPage);
           })
           .catch(err => {

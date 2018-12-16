@@ -82,30 +82,28 @@ export class CreateLocalPage {
         }
       }
     });
-
-    this._lp.addLocal(newLocal)
-    .then(res => {
-      if(res.status == 200){
-          this.presentToast();
-      }else{
-        this.presentAlert();
-      }
+    
+    this._lp.addLocal(newLocal).subscribe((local: Local) => {
+      this.presentToast();
+    }, error => {
+      this.presentAlert();
+      console.log(error);
     });
   }
   
   presentToast() {
     let toast = this.toastCtrl.create({
       message: 'El local fué añadido correctamente',
-      duration: 2500
+      duration: 1200
     });
-  
+    
     toast.onDidDismiss(() => {
       this.navCtrl.pop();
     });
-  
+    
     toast.present();
   }
-
+  
   presentAlert() {
     let alert = this.alertCtrl.create({
       title: 'Error en el servidor',
@@ -114,7 +112,7 @@ export class CreateLocalPage {
     });
     alert.present();
   }
-
+  
   fakeSendData(){
     let newLocal = new Local({
       name: 'Sibara',
@@ -130,9 +128,11 @@ export class CreateLocalPage {
       }
     });
     
-    this._lp.addLocal(newLocal)
-    .then(res => {
-      console.log(res);
+    this._lp.addLocal(newLocal).subscribe((local: Local) => {
+      this.presentToast();
+    }, error => {
+      this.presentAlert();
+      console.log(error);
     });
     
   }

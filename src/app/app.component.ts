@@ -105,6 +105,7 @@ export class MyApp {
         this.nav.setRoot(LoginPage);
         this.menu.close();
       });
+      localStorage.removeItem('session');
     }
     
   }

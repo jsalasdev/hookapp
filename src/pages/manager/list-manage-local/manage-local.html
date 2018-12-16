@@ -2,8 +2,8 @@
 
     <ion-navbar>
         <button ion-button menuToggle>
-              <ion-icon name="menu"></ion-icon>
-          </button>
+            <ion-icon name="menu"></ion-icon>
+        </button>
         <ion-title>Mis locales</ion-title>
     </ion-navbar>
 
@@ -34,18 +34,16 @@
                 <ion-grid *ngSwitchCase="'mylocals'">
                     <ion-row align-items-center text-center *ngIf="myLocals.length==0">
                         <ion-col col-12>
-                            <p text-center> No tienes ningún local</p>
-                            <p text-center> ¿Eres gerente de un local y quieres ganar visibilidad?</p>
+                            <p text-center> No tienes ningún local.</p>
+                            <p text-center> ¿Eres gerente de un local y quieres ganar visibilidad? <br>Envía tu solicitud. </p>
 
-                            <button ion-button icon-left small color="primary" (click)="openAddContacts()">
+                            <button ion-button icon-left small color="primary" (click)="goToCreate()">
                                 <ion-icon name="add"></ion-icon>
                                 Añadir Local
                             </button>
                         </ion-col>
                     </ion-row>
 
-                    <!-- <ion-row class="row-item" *ngIf="myLocals.length>0"> -->
-                    <!-- <ion-scroll style="width:100%;height:100vh" scrollY="true"> -->
                     <ion-list padding>
                         <ion-item-sliding *ngFor="let item of myLocals">
                             <ion-item>
@@ -53,27 +51,24 @@
                                     <img [src]="assets/imgs/usuario">
                                 </ion-thumbnail>
                                 <h2>{{item.name}}</h2>
-                                <!-- <h2>{{item.title}}</h2> -->
-                                <p>{{item.locality}} • {{item.createdAt | date:'shortDate'}}</p>
-                                <!-- <p>{{item.place}} • {{item.date}}</p> -->
+                                <p>{{item.location.description}}</p>
+                                <button ion-button color="warning" *ngIf="item.status=='PROCESSING'">
+                                    <ion-icon name="build"></ion-icon>                                
+                                     &nbsp; Solicitud en proceso
+                                </button>
                             </ion-item>
                             <ion-item-options side="right">
-                                <button ion-button color="secondary" (click)="viewComments(item)">
-                                            <ion-icon name="trash"></ion-icon>
-                                            Eliminar
-                                        </button>
-                                <button ion-button color="light" (click)="delete(item)">
-                                            <ion-icon name="create"></ion-icon>
-                                            Editar
-                                        </button>
+                                <button ion-button color="secondary" (click)="deleteLocal(item, $index)">
+                                    <ion-icon name="trash"></ion-icon>
+                                    Eliminar
+                                </button>
+                                <button ion-button color="light" (click)="editLocal(item)">
+                                    <ion-icon name="create"></ion-icon>
+                                    Editar
+                                </button>
                             </ion-item-options>
                         </ion-item-sliding>
-
-
                     </ion-list>
-                    <!-- </ion-scroll> -->
-                    <!-- </ion-row> -->
-
                 </ion-grid>
             </ion-col>
         </ion-row>
@@ -83,23 +78,46 @@
         <ion-row>
             <ion-col col-12 col-lg-8 offset-lg-2 [ngSwitch]="option">
                 <ion-grid *ngSwitchCase="'favoritelocals'">
-                    <ion-row align-items-center text-center>
+                    <ion-row align-items-center text-center *ngIf="favoriteLocals.length==0">
                         <ion-col col-12>
                             <p text-center> No tienes ningún local favorito</p>
-                            <p text-center> ¿Quieres ver las novedades de tus locales favoritos?</p>
-
-                            <button ion-button icon-left small color="primary" (click)="openAddContacts()">
-                                        <ion-icon name="add"></ion-icon>
-                                        Añadir Local Favorito
-                                    </button>
+                            <p text-center> ¿Quieres ver las novedades de tus locales favoritos? Encuentra tus locales favoritos en el buscador.</p>
                         </ion-col>
                     </ion-row>
+
+
+                    <ion-list padding>
+                        <ion-item-sliding *ngFor="let item of favoriteLocals">
+                            <ion-item>
+                                <ion-thumbnail item-start>
+                                    <img [src]="assets/imgs/usuario">
+                                </ion-thumbnail>
+                                <h2>{{item.name}}</h2>
+                                <!-- <h2>{{item.title}}</h2> -->
+                                <p>{{item.location.description}}</p>
+                                <!-- <p>{{item.place}} • {{item.date}}</p> -->
+                            </ion-item>
+                            <!-- <ion-item-options side="right">
+                                <button ion-button color="secondary" (click)="viewComments(item)">
+                                    <ion-icon name="trash"></ion-icon>
+                                    Eliminar
+                                </button>
+                                <button ion-button color="light" (click)="delete(item)">
+                                    <ion-icon name="create"></ion-icon>
+                                    Editar
+                                </button>
+                            </ion-item-options> -->
+                        </ion-item-sliding>
+
+
+                    </ion-list>
+
                 </ion-grid>
             </ion-col>
         </ion-row>
 
     </ion-grid>
 </ion-content>
-<ion-fab right bottom *ngIf="myLocals.length>0">
+<ion-fab right bottom *ngIf="myLocals.length>0 && option=='mylocals'">
     <button (click)="goToCreate()" class="button-fab" ion-fab mini><ion-icon name="add"></ion-icon></button>
 </ion-fab>

@@ -9,4 +9,9 @@ page-manage-local {
     .button-fab {
         z-index: 100;
     }
+    .badge-status {
+        background: red;
+        height: 25px;
+        width: 100%;
+    }
 }
