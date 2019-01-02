@@ -62,12 +62,12 @@ export class MyApp {
                 this.rootPage = TabsPage;
               }else{
                 //LOGINPAGE
-                this.rootPage = TabsPage;
+                this.rootPage = LoginPage;
               }
             });
           } else {
             //INTROPAGE
-            this.rootPage = TabsPage;
+            this.rootPage = IntroPage;
             this._st.set('intro', true);
           }
         });
