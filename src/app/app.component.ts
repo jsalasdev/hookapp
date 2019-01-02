@@ -9,8 +9,9 @@ import { User } from '../models/user';
 import { LoginPage } from '../pages/login/login';
 import { ManageLocalPage } from '../pages/manager/list-manage-local/manage-local';
 import { IntroPage } from '../pages/intro/intro';
-
-
+import { LocalProfilePage } from '../pages/manager/local-profile/local-profile';
+import { UserSelectTypePage } from '../pages/user/user-select-type/user-select-type';
+import { RoulettePage } from '../pages/roulette/roulette';
 
 @Component({
   templateUrl: 'app.html'
@@ -19,7 +20,8 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
   rootPage:any;
   pages: Array<{title: string, component: any, index:number}>;
-  
+  pagesOwner: Array<{title: string, component: any, index:number}>;
+
   body: any;
   user = {} as User;
   
@@ -34,15 +36,17 @@ export class MyApp {
     ) {
       this.initializeApp();
       
-      // set our app's pages
-      //only use index in interested pages
       this.pages = [
         { title: 'Inicio', component: TabsPage , index: 0},
+        { title: 'Mis locales favoritos', component: ManageLocalPage , index: 1 },
+        { title: 'Ruleta', component: RoulettePage, index: 0 },
         //cambiar por tabspage y el indice de manage locales
-        { title: 'Mi/s local/es', component: ManageLocalPage , index: 0 },
-        { title: 'Recetas', component: null, index: 0 },
-        { title: 'Tabacos', component: null, index: 0 },
-        { title: 'Mi perfil', component: UserProfilePage, index: 0 }        
+        // { title: 'Recetas', component: null, index: 0},
+        // { title: 'Tabacos', component: null, index: 0},
+        // { title: 'Mi perfil', component: LocalProfilePage, index: 0}        
+      ];
+      this.pagesOwner = [
+        { title: 'Mis locales', component: ManageLocalPage , index: 0}   
       ];
     }
     
@@ -51,16 +55,19 @@ export class MyApp {
         this._st.get('intro').then((result) => {
           if (result) {
             this._st.get('session').then((result) => {
+              console.log(result);
               if(result){
+                //TABSPAGE
+                this.user = JSON.parse(result).user;
                 this.rootPage = TabsPage;
               }else{
                 //LOGINPAGE
-                this.rootPage = LoginPage;
+                this.rootPage = TabsPage;
               }
             });
           } else {
             //INTROPAGE
-            this.rootPage = IntroPage;
+            this.rootPage = TabsPage;
             this._st.set('intro', true);
           }
         });
@@ -74,7 +81,8 @@ export class MyApp {
       if(page.component){
         this.menu.close();
         this.nav.setRoot(page.component, {
-          index: page.index
+          index: page.index,
+          role: this.user.userType
         });
       }else{
         this.alertCtrl.create({
@@ -90,14 +98,12 @@ export class MyApp {
     
     menuOpened() {   
       console.log('MENU OPEN'); 
-      this._st.get('session').then(res => {
-        if(res && res.user){
-          this.zone.run(() => {
-            this.user = res.user;
-            console.log(this.user);
-          });          
-        }
-      });
+      let res = JSON.parse(localStorage.getItem('session'));
+      if(res && res.user){
+        this.zone.run(() => {
+          this.user = res.user;
+        });          
+      }
     }
     
     logout(){

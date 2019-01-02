@@ -24,21 +24,45 @@ export class CreateLocalPage {
   todo = {};  
   form: FormGroup;
   location:any;
+  mode:string;
+  editLocal: Local;
+  metaTitle:string;
+  hasMusic;
   
   constructor(private alertCtrl: AlertController, private toastCtrl: ToastController,private _lp: LocalProvider, private formBuilder: FormBuilder, public navCtrl: NavController, public navParams: NavParams) {
-    
-    this.form = this.formBuilder.group({
-      name: ['', Validators.required],
-      availableHookahs: [''],
-      location: ['', Validators.required],
-      tobaccoPrice:['',Validators.required],
-      premiumTobaccoPrice:['']
-    });
+    this.mode = this.navParams.data.mode;
+    this.editLocal = this.navParams.data.local;
+    this.metaTitle = this.mode=='creation'?'Crear Local':'Editar Local';
+    if(this.mode=='edit' && this.editLocal){
+      this.form = this.formBuilder.group({
+        name: [this.editLocal.name, Validators.required],
+        availableHookahs: [this.editLocal.availableHookahs],
+        location: [this.editLocal.location.description, Validators.required],
+        tobaccoPrice:[this.editLocal.tobaccoPrice,Validators.required],
+        premiumTobaccoPrice:[this.editLocal.premiumTobaccoPrice],
+        hasMusic: [this.editLocal.hasMusic],
+        hasAir: [this.editLocal.hasAirConditioner],
+        hasSoccer: [this.editLocal.hasSoccer],
+        localSpace:[this.editLocal.localSpace]
+      });
+      // this.form.controls['location'].setValue(this.editLocal.location.description);
+    }else{
+      this.form = this.formBuilder.group({
+        name: ['', Validators.required],
+        availableHookahs: [''],
+        location: ['', Validators.required],
+        tobaccoPrice:['',Validators.required],
+        premiumTobaccoPrice:[''],
+        hasMusic: [false],
+        hasAir: [false],
+        hasSoccer: [false],
+        localSpace:['']
+      });
+    }
   }
   
   
   ionViewDidLoad() {
-    console.log('ionViewDidLoad CreateLocalPage');
   }
   
   goToSelectLocation(){
@@ -67,74 +91,105 @@ export class CreateLocalPage {
   }
   
   sendData(value:Object){
-    // console.log(value);
-    console.log('CREATE-LOCAL: ', this.location);
-    let newLocal = new Local({
-      name: value['name'],
-      availableHookahs: value['availableHookahs'],
-      premiumTobaccoPrice: value['premiumTobaccoPrice'],
-      tobaccoPrice: value['tobaccoPrice'],
-      location :{
-        description: this.location.address,
-        latLng: {
-          lat: this.location.geometry.latitude,
-          lng: this.location.geometry.longitude
-        }
+    switch(this.mode){
+      case 'creation':
+      let newLocal = new Local({
+        name: value['name'],
+        availableHookahs: value['availableHookahs'],
+        premiumTobaccoPrice: value['premiumTobaccoPrice'],
+        tobaccoPrice: value['tobaccoPrice'],
+        hasMusic: value['hasMusic'],
+        hasAir: value['hasAir'],
+        localSpace: value['localSpace'],
+        hasSoccer: value['hasSoccer'],
+        location :{
+          description: this.location.address,
+          coordinates: [this.location.geometry.latitude,
+            this.location.geometry.longitude]
+          }
+        });
+        this._lp.addLocal(newLocal).subscribe((local: Local) => {
+          this.presentToast();
+        }, error => {
+          this.presentAlert();
+        });
+        break;
+        case 'edit':
+        this.editLocal.name = value['name'];
+        this.editLocal.availableHookahs = value['availableHookahs'],
+        this.editLocal.premiumTobaccoPrice = value['premiumTobaccoPrice'],
+        this.editLocal.tobaccoPrice = value['tobaccoPrice'],
+        this.editLocal.hasMusic = value['hasMusic'],
+        this.editLocal.hasAirConditioner = value['hasAir'],
+        this.editLocal.localSpace = value['localSpace'],
+        this.editLocal.hasSoccer = value['hasSoccer'],
+        this.editLocal.location.description = this.location!==undefined ? this.location.address : this.editLocal.location.description;
+        this.editLocal.location.coordinates[0] = this.location!==undefined && this.location.geometry!==undefined ? this.location.geometry.latitude : this.editLocal.location.coordinates[0];
+        this.editLocal.location.coordinates[1] = this.location!==undefined && this.location.geometry!==undefined ? this.location.geometry.longitude : this.editLocal.location.coordinates[1];
+        
+        this._lp.updateLocal(this.editLocal).subscribe((updatedLocal:Local) => {
+          if(updatedLocal){
+            let toast = this.toastCtrl.create({
+              message: 'Actualizado correctamente',
+              duration: 1200
+            });            
+            toast.present();
+          }else{
+            this.presentAlert();
+          }
+        }, (err) => {
+          this.presentAlert();
+        });
+        
+        break;
       }
-    });
+    }
     
-    this._lp.addLocal(newLocal).subscribe((local: Local) => {
-      this.presentToast();
-    }, error => {
-      this.presentAlert();
-      console.log(error);
-    });
-  }
-  
-  presentToast() {
-    let toast = this.toastCtrl.create({
-      message: 'El local fué añadido correctamente',
-      duration: 1200
-    });
+    presentToast() {
+      let toast = this.toastCtrl.create({
+        message: 'El local fué añadido correctamente',
+        duration: 1200
+      });
+      
+      toast.onDidDismiss(() => {
+        this.navCtrl.pop();
+      });
+      
+      toast.present();
+    }
     
-    toast.onDidDismiss(() => {
-      this.navCtrl.pop();
-    });
+    presentAlert() {
+      let alert = this.alertCtrl.create({
+        title: 'Error en el servidor',
+        subTitle: 'Ocurrió un error inesperado, pruebe en unos minutos...',
+        buttons: ['Ok']
+      });
+      alert.present();
+    }
     
-    toast.present();
-  }
-  
-  presentAlert() {
-    let alert = this.alertCtrl.create({
-      title: 'Error en el servidor',
-      subTitle: 'Ocurrió un error inesperado, pruebe en unos minutos...',
-      buttons: ['Ok']
-    });
-    alert.present();
-  }
-  
-  fakeSendData(){
-    let newLocal = new Local({
-      name: 'Sibara',
-      availableHookahs: 25,
-      premiumTobaccoPrice: 10,
-      tobaccoPrice: 7,
-      location :{
-        description: 'Calle maniaflores',
-        latLng: {
-          lat: 13.3123,
-          lng: 3.12312
+    fakeSendData(){
+      let newLocal = new Local({
+        name: 'Sibara',
+        availableHookahs: 25,
+        premiumTobaccoPrice: 10,
+        tobaccoPrice: 7,
+        location :{
+          description: 'Calle maniaflores',
+          latLng: {
+            lat: 13.3123,
+            lng: 3.12312
+          }
         }
-      }
-    });
-    
-    this._lp.addLocal(newLocal).subscribe((local: Local) => {
-      this.presentToast();
-    }, error => {
-      this.presentAlert();
-      console.log(error);
-    });
+      });
+      
+      this._lp.addLocal(newLocal).subscribe((local: Local) => {
+        this.presentToast();
+      }, error => {
+        this.presentAlert();
+        console.log(error);
+      });
+      
+    }
     
   }
   
-}

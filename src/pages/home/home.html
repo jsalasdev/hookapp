@@ -10,11 +10,62 @@
         <button ion-button menuToggle>
             <ion-icon name="menu"></ion-icon>
         </button>
-        <ion-title>Inicio</ion-title>
+        <!-- <ion-title>Inicio</ion-title> -->
     </ion-navbar>
 
 </ion-header>
 
-<ion-content padding>
-    PAGINA INICIO
+<ion-content class="body">
+    <!-- <ion-col text-center> -->
+    <!-- </ion-col> -->
+    <ion-grid>
+        <ion-row text-center>
+            <h3 padding class="slide-title">
+                <ion-icon name="clock"></ion-icon>
+                Más recientes</h3>
+        </ion-row>
+        <ion-row *ngIf="latestsLocals.length>0">
+            <ion-slides pager>
+                <ion-slide *ngFor="let item of latestsLocals" class="text-center slider-item">
+                    <ion-row padding (click)="openProfile(item)">
+                        <ion-col>
+                            <h3>{{item.name}}</h3>
+                            <span>{{item.location.description}}</span>
+                        </ion-col>
+                    </ion-row>
+
+                </ion-slide>
+            </ion-slides>
+
+        </ion-row>
+        <ion-col text-center *ngIf="latestsLocals.length==0">
+            <span>Error al mostrar los locales.</span>
+        </ion-col>
+
+        <ion-row text-center>
+            <h3 padding class="slide-title">
+                <ion-icon name="trophy"></ion-icon>
+                Top 5</h3>
+        </ion-row>
+        <div *ngIf="topLocals.length>0">
+            <ion-list no-lines *ngFor="let item of topLocals; let i = index">
+                <ion-item text-center class="item-inner label" (click)="openProfile(item)">
+                    <p>
+                        <b><span style="color:red;">{{i+1}}</span>.</b> <span class="top-locals-text">{{item.local.name}}</span> - ({{item.follows}})
+                        <!-- <ion-icon name="person-add"></ion-icon> -->
+                    </p>
+                </ion-item>
+            </ion-list>
+            <hr class="line-end">
+        </div>
+        <ion-col text-center *ngIf="topLocals.length==0">
+            <span>Error al mostrar los locales.</span>
+        </ion-col>
+
+    </ion-grid>
+    <!-- 
+                    <ion-grid>
+                        
+                    </ion-grid> -->
+
 </ion-content>

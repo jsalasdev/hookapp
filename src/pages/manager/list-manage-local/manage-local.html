@@ -13,7 +13,7 @@
         <ion-row>
             <ion-col col-12 col-lg-8 offset-lg-2>
                 <ion-segment [(ngModel)]="option">
-                    <ion-segment-button value="mylocals">
+                    <ion-segment-button *ngIf="isOwner" value="mylocals">
                         <ion-icon name="clipboard"></ion-icon>
                         <br />
                         <span>Mis locales</span>
@@ -44,20 +44,30 @@
                         </ion-col>
                     </ion-row>
 
-                    <ion-list padding>
+                    <ion-list no-lines padding>
                         <ion-item-sliding *ngFor="let item of myLocals">
-                            <ion-item>
-                                <ion-thumbnail item-start>
+                            <ion-item (click)="openProfile(item)" class="item-divider">
+                                <!-- <ion-thumbnail item-start>
                                     <img [src]="assets/imgs/usuario">
-                                </ion-thumbnail>
-                                <h2>{{item.name}}</h2>
-                                <p>{{item.location.description}}</p>
-                                <button ion-button color="warning" *ngIf="item.status=='PROCESSING'">
-                                    <ion-icon name="build"></ion-icon>                                
-                                     &nbsp; Solicitud en proceso
-                                </button>
+                                </ion-thumbnail> -->
+                                <h2 class="item-title">{{item.name}}</h2>
+                                <p class="item-subtitle">Tabacos: <b>{{item.tobaccos.length}}</b> &bull; Cachimbas: <b>{{item.availableHookahs}}</b> </p>
+                                <!-- <p class="item-subtitle"></p> -->
+                                <ion-row text-center>
+                                    <ion-col>
+                                        <button style="color:white;" ion-button color="warning" *ngIf="item.status=='PROCESSING'">
+                                            <ion-icon name="build"></ion-icon>                                
+                                            &nbsp; Solicitud en proceso
+                                        </button>
+
+                                    </ion-col>
+                                </ion-row>
                             </ion-item>
                             <ion-item-options side="right">
+                                <button ion-button color="light" (click)="editMenu(item, $index)">
+                                    <ion-icon name="book"></ion-icon>
+                                    Editar Carta
+                                </button>
                                 <button ion-button color="secondary" (click)="deleteLocal(item, $index)">
                                     <ion-icon name="trash"></ion-icon>
                                     Eliminar
@@ -86,15 +96,15 @@
                     </ion-row>
 
 
-                    <ion-list padding>
+                    <ion-list no-lines padding>
                         <ion-item-sliding *ngFor="let item of favoriteLocals">
-                            <ion-item>
-                                <ion-thumbnail item-start>
+                            <ion-item (click)="openProfile(item)">
+                                <!-- <ion-thumbnail item-start>
                                     <img [src]="assets/imgs/usuario">
-                                </ion-thumbnail>
-                                <h2>{{item.name}}</h2>
+                                </ion-thumbnail> -->
+                                <p class="item-title">{{item.name}}</p>
                                 <!-- <h2>{{item.title}}</h2> -->
-                                <p>{{item.location.description}}</p>
+                                <p class="item-subtitle">{{item.location.description}}</p>
                                 <!-- <p>{{item.place}} • {{item.date}}</p> -->
                             </ion-item>
                             <!-- <ion-item-options side="right">
@@ -108,10 +118,7 @@
                                 </button>
                             </ion-item-options> -->
                         </ion-item-sliding>
-
-
                     </ion-list>
-
                 </ion-grid>
             </ion-col>
         </ion-row>

@@ -1,4 +1,8 @@
 page-intro {
+    body {
+        background-position: center top;
+        background-size: cover;
+    }
     .swiper-pagination-bullet {
         background-color: #fff;
     }
@@ -25,7 +29,7 @@ page-intro {
         text-transform: none;
         font-size: 1.4em;
         font-weight: bold;
-        background: rgba(49, 161, 216, 0.67);
+        background: #fcba04;
     }
     .slide-background {
         background-size: cover !important;

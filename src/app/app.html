@@ -1,7 +1,5 @@
 <ion-menu [content]="content" (ionOpen)="menuOpened()" (ionClose)="menuClosed()">
-
     <ion-content>
-
         <div no-lines class="cont">
             <ion-avatar item-start>
                 <img src="{{user.picture}}" class="custom-avatar" (click)="editProfileUser(12)" *ngIf="user.picture">
@@ -11,30 +9,34 @@
         <ion-item no-lines class="user-name">
             <h2>Bienvenido {{user.firstName}}</h2>
         </ion-item>
-        <ion-list>
+        <ion-list padding>
             <button ion-item *ngFor="let p of pages" (click)="openPage(p)">
-        {{p.title}}
-      </button>
+                {{p.title}}
+            </button>
+        </ion-list>
+        <!-- <ion-list *ngIf="user.userType=='TYPE_OWNER'"> -->
+        <ion-list padding *ngIf="user.userType=='TYPE_OWNER'">
+            <div>
+                <h6>Panel Gerente</h6>
+            </div>
+            <button ion-item *ngFor="let p of pagesOwner" (click)="openPage(p)">
+                    {{p.title}}
+                </button>
         </ion-list>
 
-
-
-        <ion-footer>
-            <ion-list class="log-button">
-                <hr>
-                <ion-item (click)="logout()">
-                    Cerrar sesión
-                </ion-item>
-            </ion-list>
-            <ion-list class="copyright">
-                <ion-item>
-                    Made with <span style="color: #e25555;">&#9829;</span> in Seville
-
-                </ion-item>
-            </ion-list>
-        </ion-footer>
     </ion-content>
-
+    <ion-footer>
+        <ion-list no-lines class="log-button">
+            <hr>
+            <ion-item text-center (click)="logout()">
+                Cerrar sesión
+            </ion-item>
+        </ion-list>
+        <ion-list no-lines class="copyright">
+            <ion-item>
+                Made with <span style="color: #e25555;">&#9829;</span> in Seville
+            </ion-item>
+        </ion-list>
+    </ion-footer>
 </ion-menu>
-
 <ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>

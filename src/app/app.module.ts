@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, ErrorHandler } from '@angular/core';
+import { NgModule, ErrorHandler, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 
@@ -25,6 +25,11 @@ import { LocalProfilePageModule } from '../pages/manager/local-profile/local-pro
 import { CreateLocalPageModule } from '../pages/manager/create-local/create-local.module';
 import { SelectLocationPageModule } from '../pages/manager/select-location/select-location.module';
 import { LocalProvider } from '../providers/locals/local';
+import { UserSelectTypePageModule } from '../pages/user/user-select-type/user-select-type.module';
+import { SelectTobaccoPageModule } from '../pages/manager/select-tobacco/select-tobacco.module';
+import { TobaccoProvider } from '../providers/locals/tobacco';
+import { EditLocalTobaccoListPageModule } from '../pages/manager/edit-local-tobacco-list/edit-local-tobacco-list.module';
+import { RoulettePageModule } from '../pages/roulette/roulette.module';
 
 // export function jwtOptionsFactory(storage) {
 //   return {
@@ -53,6 +58,10 @@ import { LocalProvider } from '../providers/locals/local';
     LocalProfilePageModule,
     IntroPageModule,
     LoginPageModule,
+    UserSelectTypePageModule,
+    SelectTobaccoPageModule,
+    EditLocalTobaccoListPageModule,
+    RoulettePageModule,
     IonicStorageModule.forRoot(),
     IonicModule.forRoot(MyApp)
   //   JwtModule.forRoot({
@@ -73,7 +82,9 @@ import { LocalProvider } from '../providers/locals/local';
     Facebook,
     UserProvider,
     LocalProvider,
+    TobaccoProvider,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
-  ]
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {}

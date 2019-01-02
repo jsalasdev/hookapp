@@ -1,5 +1,5 @@
-import { Headers, Http, RequestOptions} from '@angular/http';
-import { ENDPOINT } from '../../assets/tempconf/conf';
+import { Headers, Http, RequestOptions, URLSearchParams} from '@angular/http';
+import { ENDPOINT, DEV_TOKEN } from '../../assets/tempconf/conf';
 import {Storage} from '@ionic/storage';
 import { Injectable } from '@angular/core';
 import { Local } from '../../models/local';
@@ -7,22 +7,97 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
+import { LocalFollow } from '../../models/localfollow';
+import { LocalReview } from '../../models/localreview';
 
 @Injectable()
 export class LocalProvider {
     
-    token:string = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImZpcnN0TG9naW4iOnRydWUsInVzZXJUeXBlIjoiVFlQRV9TT0NJQUwiLCJzdGF0ZSI6dHJ1ZSwiaG9va2FoQ291bnRlciI6MCwiZmF2b3JpdGVMb2NhbHMiOltdLCJfaWQiOiI1YzBlYzM2MDIyZDI0MTRhZDg3OTcwMTgiLCJmaXJzdE5hbWUiOiJKZXPDunMiLCJsYXN0TmFtZSI6IlNhbGFzIiwicGljdHVyZSI6Imh0dHBzOi8vcGxhdGZvcm0tbG9va2FzaWRlLmZic2J4LmNvbS9wbGF0Zm9ybS9wcm9maWxlcGljLz9hc2lkPTgwMjkwOTAxNjcyMTMzOCZoZWlnaHQ9MTAwJndpZHRoPTEwMCZleHQ9MTU0NzA2MzM5MSZoYXNoPUFlUlNxZzF0YkhUUmY1U0MiLCJwcm92aWRlcklkIjoiODAyOTA5MDE2NzIxMzM4IiwicHJvdmlkZXIiOiJmYWNlYm9vayIsIl9fdiI6MH0sImlhdCI6MTU0NDg3NjIwMSwiZXhwIjoxNTQ1MDQ5MDAxfQ.YM25X1hhiy3r4p5bO83dKdmnD9KMrrdJKt9jA4D1gfI';
-    
     constructor(private storage: Storage, private http:Http){
+    }
+    
+    getLocalById(id):Observable<Local>{
+        let url = `${ENDPOINT}/locals/${id}`;
+        let session = JSON.parse(localStorage.getItem("session"));
+        let token = session?session.token:DEV_TOKEN;
+        let headers = new Headers();
+        headers.append('token', token);
+        let options = new RequestOptions({headers: headers});
+        return this.http.get(url, options)
+        .map(res => {
+            return res.json()['local'];
+        })
+        .catch(this.handleError);
+    }
+    
+    getLocalsByLocation(longitude, latitude, radius): Observable<Local[]>{
+        let url = `${ENDPOINT}/locals/locations`;
+        let session = JSON.parse(localStorage.getItem("session"));
+        let token = session?session.token:DEV_TOKEN;
+        let headers = new Headers();
+        headers.append('token', token);
+        let params = new URLSearchParams();
+        params.append("latitude", latitude);
+        params.append("longitude", longitude);
+        params.append("radius", radius);
+        let options = new RequestOptions({headers: headers});
+        options.params = params;
+        return this.http.get(url, options)
+        .map(res => {
+            return res.json()['locals'];
+        })
+        .catch(this.handleError);
+    }
+    
+    getUserInfoFromLocal(local:Local): Observable<any>{
+        let url = `${ENDPOINT}/locals/${local._id}/info`;
+        let session = JSON.parse(localStorage.getItem("session"));
+        let token = session?session.token:DEV_TOKEN;
+        let headers = new Headers();
+        headers.append('token', token);
+        let options = new RequestOptions({headers: headers});
+        return this.http.get(url, options)
+        .map(res => {
+            return res.json()['info'];
+        })
+        .catch(this.handleError);
+    }
+    
+    postFollow(local:Local): Observable<LocalFollow>{
+        let url = `${ENDPOINT}/locals/${local._id}/follow`;
+        let session = JSON.parse(localStorage.getItem("session"));
+        let token = session?session.token:DEV_TOKEN;
+        let headers = new Headers();
+        headers.append('token', token);
+        let options = new RequestOptions({headers: headers});
+        return this.http.put(url, null, options)
+        .map(res => {
+            return res.json()['follow'];
+        })
+        .catch(this.handleError);
+    }
+    
+    postReview(local:Local,rating:any): Observable<LocalReview>{
+        let url = `${ENDPOINT}/locals/${local._id}/review?rating=${rating}`;
+        let session = JSON.parse(localStorage.getItem("session"));
+        let token = session?session.token:DEV_TOKEN;
+        let headers = new Headers();
+        headers.append('token', token);
+        let options = new RequestOptions({headers: headers});
+        return this.http.put(url,null, options)
+        .map(res => {
+            return res.json()['review'];
+        })
+        .catch(this.handleError);
     }
     
     addLocal(local:Local): Observable<Local>{
         let url = `${ENDPOINT}/locals`;
         let session = JSON.parse(localStorage.getItem("session"));
-        // this.token = session.token;
+        let token = session?session.token:DEV_TOKEN;
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
-        headers.append('token', this.token);
+        headers.append('token', token);
         let options = new RequestOptions({headers: headers});
         return this.http.post(url, local, options)
         .map(res => {
@@ -34,10 +109,47 @@ export class LocalProvider {
     getMyLocals(): Observable<Local[]>{
         let url = `${ENDPOINT}/locals`;
         let session = JSON.parse(localStorage.getItem("session"));
-        this.token = session.token;
+        let token = session?session.token:DEV_TOKEN;
+        let params = new URLSearchParams();
+        params.append('type', 'my-locals');
         let headers = new Headers();
-        headers.append('token', this.token);
+        headers.append('token', token);
         let options = new RequestOptions({headers: headers});
+        options.params = params;
+        return this.http.get(url, options)
+        .map(res => {
+            return res.json()['locals'];
+        })
+        .catch(this.handleError);
+    }
+
+    getLatestsLocals(): Observable<Local[]>{
+        let url = `${ENDPOINT}/locals`;
+        let session = JSON.parse(localStorage.getItem("session"));
+        let token = session?session.token:DEV_TOKEN;
+        let params = new URLSearchParams();
+        params.append('type', 'latests');
+        let headers = new Headers();
+        headers.append('token', token);
+        let options = new RequestOptions({headers: headers});
+        options.params = params;
+        return this.http.get(url, options)
+        .map(res => {
+            return res.json()['locals'];
+        })
+        .catch(this.handleError);
+    }
+
+    getLocalsByFollows(): Observable<any[]>{
+        let url = `${ENDPOINT}/locals`;
+        let session = JSON.parse(localStorage.getItem("session"));
+        let token = session?session.token:DEV_TOKEN;
+        let params = new URLSearchParams();
+        params.append('type', 'top-followers');
+        let headers = new Headers();
+        headers.append('token', token);
+        let options = new RequestOptions({headers: headers});
+        options.params = params;
         return this.http.get(url, options)
         .map(res => {
             return res.json()['locals'];
@@ -48,13 +160,12 @@ export class LocalProvider {
     getFavoriteLocals(): Observable<Local[]>{
         let url = `${ENDPOINT}/users/favorite-locals`;
         let session = JSON.parse(localStorage.getItem("session"));
-        this.token = session.token;
+        let token = session?session.token:DEV_TOKEN;
         let headers = new Headers();
-        headers.append('token', this.token);
+        headers.append('token', token);
         let options = new RequestOptions({headers: headers});
         return this.http.get(url, options)
         .map(res => {
-            console.log(res.json());
             return res.json()['user'].favoriteLocals;
         })
         .catch(this.handleError);
@@ -63,17 +174,32 @@ export class LocalProvider {
     deleteLocal(local: Local): Observable<Local> {
         let url = `${ENDPOINT}/locals/${local._id}`;
         let session = JSON.parse(localStorage.getItem("session"));
-        this.token = session.token;
+        let token = session?session.token:DEV_TOKEN;
         let headers = new Headers();
-        headers.append('token', this.token);
+        headers.append('token', token);
         let options = new RequestOptions({headers: headers});
-
         return this.http.delete(url, options)
         .catch(this.handleError);
     }
-
+    
+    updateLocal(local: Local): Observable<Local> {
+        let url = `${ENDPOINT}/locals/${local._id}`;
+        let session = JSON.parse(localStorage.getItem("session"));
+        let token = session?session.token:DEV_TOKEN;
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('token', token);
+        let options = new RequestOptions({headers: headers});
+        return this.http.put(url, local, options)
+        .map(res => {
+            return res.json()['local'];
+        })
+        .catch(this.handleError);
+    }
+    
     private handleError (error: Response | any) {
         console.log("Handle Error");
+        console.log(error);
         let errMsg: string;
         if (error instanceof Response) {
             const err = error || '';

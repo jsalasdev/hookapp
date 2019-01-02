@@ -1,4 +1,9 @@
 page-manage-local {
+    .title-list {
+        font-size: 1.5em;
+        font-weight: bold;
+        color: #000;
+    }
     img {
         max-width: 10.6rem !important;
         max-height: 10.6rem !important;
@@ -13,5 +18,28 @@ page-manage-local {
         background: red;
         height: 25px;
         width: 100%;
+    }
+    .item,
+    .item-divider {
+        margin: 1px;
+        border: 1px solid #fcba04;
+        border-radius: 4px;
+        background: #ffe18e;
+    }
+    .item-title {
+        text-shadow: 1px 1px 5px #7e0a0a;
+        text-align: center;
+        top: 36%;
+        font-size: 1.5em;
+        width: 100%;
+        font-weight: bold;
+        color: #fff;
+    }
+    .item-subtitle {
+        text-align: center;
+        font-size: 1.0em;
+        top: 52%;
+        width: 100%;
+        color: #7e0a0a;
     }
 }

@@ -1,0 +1,25 @@
+<ion-header>
+
+    <ion-navbar>
+        <ion-title>Editar Carta</ion-title>
+    </ion-navbar>
+
+</ion-header>
+
+<ion-content overflow-scroll="false">
+    <ion-grid *ngIf="brands.length>0;else elseTemplate">
+        <ion-col col-12 col-lg-8 offset-lg-2>
+            <ion-card class="card" padding *ngFor="let brand of brands" (click)="cardTapped(brand)">
+                <div>
+                    <h1>{{brand.name}}</h1>
+                </div>
+                <div>
+                    {{brand.tobaccos.length}} sabores
+                </div>
+            </ion-card>
+        </ion-col>
+    </ion-grid>
+    <ng-template #elseTemplate>
+        Error al cargar los sabores, pruebe más tarde...
+    </ng-template>
+</ion-content>

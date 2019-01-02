@@ -21,12 +21,12 @@ export class IntroPage {
   slides = [
     {
       title: '¿Quieres fumarte una cachimba?',
-      imageUrl: 'assets/imgs/slides/hookah.jpg',
-      description: 'Encuentra los sitios mejores valorados que están cerca tuya',
+      imageUrl: 'assets/imgs/slides/girl-smoker.jpg',
+      description: 'Encuentra los locales mejor valorados que están cerca tuya.',
     },
     {
       title: '¿Eres gerente de un local con cachimbas?',
-      imageUrl: 'assets/imgs/slides/hookah-bar.jpg',
+      imageUrl: 'assets/imgs/slides/slide-gerentes.jpg',
       description: 'Da a conocer tu carta de sabores, precios y aumenta tus clientes...',
     }
   ];
@@ -38,7 +38,6 @@ export class IntroPage {
 
   onSlideChanged() {
     this.slideIndex = this.slider.getActiveIndex();
-    console.log('Slide changed! Current index is', this.slideIndex);
   }
 
   goToApp() {

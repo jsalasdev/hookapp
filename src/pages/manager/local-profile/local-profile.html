@@ -1,18 +1,114 @@
-<!--
-  Generated template for the LocalProfilePage page.
+<ion-content padding class="transparent-header">
+    <ion-header>
+        <ion-navbar>
+        </ion-navbar>
+    </ion-header>
+    <!-- <div id="profile-bg" [ngStyle]="{'background-image': 'url(' + user.coverImage +')'}"></div> -->
+    <div id="content">
+        <ion-grid class="profile-info">
+            <h3 *ngIf="!local.isPremium" id="profile-name">{{local.name}}</h3>
+            <h3 *ngIf="local.isPremium" id="profile-name">{{local.name}} <i style="color:#fcba04" class='fas fa-award'></i></h3>
 
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
-<ion-header>
+            <!-- <ion-row text-center>
+                <p> <span *ngIf="local.isPremiumLocal">Tetería verificada &bull; </span>{{local.location.description}}</p>
+                <p class="profile-description">
+                    Horario de apertura: L-V &bull; 16:00 - Cierre
+                </p>
+            </ion-row> -->
+            <!-- <p>7 valoraciones</p> -->
+            <ion-row>
+                <ion-col center>
+                    <rating [(ngModel)]="rate" [readOnly]="blockRating" max="5" emptyStarIconName="star-outline" halfStarIconName="star-half" starIconName="star" nullable="false" (ngModelChange)="onClickRating($event)">
+                    </rating>
+                    <ion-row>
+                        <ion-col>
+                            <span class="profile-description">Media de {{average}} <ion-icon name="star"></ion-icon> con {{reviews}} valoraciones</span>
+                        </ion-col>
+                    </ion-row>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col center>
+                    <button ion-button *ngIf="!following" small color="warning" (click)="follow()">Seguir</button>
+                    <button ion-button *ngIf="following" class="follow-button" small color="primary" (click)="follow()">Siguiendo<ion-icon name="checkmark"></ion-icon></button>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+        <!-- <div id="profile-info" padding> -->
+        <!-- <img id="profile-image" [src]="user.profileImage"> -->
 
-  <ion-navbar>
-    <ion-title>local-profile</ion-title>
-  </ion-navbar>
+        <!-- </div> -->
+        <hr/>
+        <ion-grid class="profile-numbers">
+            <ion-row text-center>
+                <ion-col col-6>
+                    <p>Seguidores</p>
+                    <span>{{followers}}</span>
+                </ion-col>
+                <ion-col col-6>
+                    <p>Cachimbas</p>
+                    <span>{{local.availableHookahs}}</span>
+                </ion-col>
+            </ion-row>
+            <ion-row text-center col-12>
+                <ion-col *ngIf="local.localSpace">
+                    <p>
+                        <ion-icon name="hammer"></ion-icon>
+                        20 m2.
+                    </p>
+                </ion-col>
+                <ion-col *ngIf="local.hasAirConditioner">
+                    <p>
+                        <ion-icon name="snow"></ion-icon>
+                        Aire
+                    </p>
+                </ion-col>
+            </ion-row>
+            <ion-row text-center col-12>
+                <ion-col *ngIf="local.hasSoccer">
+                    <p>
+                        <ion-icon name="football"></ion-icon>
+                        Fútbol
+                    </p>
+                </ion-col>
+                <ion-col *ngIf="local.hasMusic">
+                    <p>
+                        <ion-icon name="musical-notes"></ion-icon>
+                        Música
+                    </p>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+        <hr/>
+    </div>
+    <div style="margin-top:20px; text-align: center;">
+        <h1>Carta</h1>
+        <accordion-list [title]="titlePremium" textColor="#fff" hasMargin="false" headerColor="#fcba04" [expanded]="index === 0">
 
-</ion-header>
+            <ion-row *ngFor="let tobacco of premiumTobaccos">
+                <ion-label style="margin-top:10px;">
+                    <p><span>{{tobacco.brand.name}}</span> &bull; {{tobacco.name}}
+                    </p>
+                    <hr/>
+                </ion-label>
+            </ion-row>
+            <div style="padding:10px;" *ngIf="premiumTobaccos.length==0">
+                <p>No hay sabores premium disponibles.</p>
+            </div>
+        </accordion-list>
+        <accordion-list [title]="title" textColor="#fff" hasMargin="false" headerColor="#fcba04" [expanded]="index === 0">
 
-
-<ion-content padding>
+            <ion-row *ngFor="let tobacco of normalTobaccos">
+                <ion-label style="margin-top:10px;">
+                    <p><span>{{tobacco.brand.name}}</span> &bull; {{tobacco.name}}
+                    </p>
+                    <hr/>
+                </ion-label>
+            </ion-row>
+            <div style="padding:10px;" *ngIf="normalTobaccos.length==0">
+                <p>No hay sabores normales disponibles.</p>
+            </div>
+        </accordion-list>
+    </div>
 
 </ion-content>

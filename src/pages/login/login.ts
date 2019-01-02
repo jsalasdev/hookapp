@@ -4,6 +4,7 @@ import { Facebook, FacebookLoginResponse} from '@ionic-native/facebook';
 import { UserProvider } from '../../providers/users/user';
 import { TabsPage } from '../tabs/tabs';
 import { Storage } from '@ionic/storage';
+import { UserSelectTypePage } from '../user/user-select-type/user-select-type';
 /**
 * Generated class for the LoginPage page.
 *
@@ -26,7 +27,7 @@ export class LoginPage {
   }
   
   ionViewDidLoad() {
-    console.log('ionViewDidLoad LoginPage');
+    
   }
   
   login(){
@@ -36,10 +37,17 @@ export class LoginPage {
         if(res.authResponse){
           this._us.loginWithFacebook(res.authResponse.accessToken)
           .then(resp => {
-            console.log('RESPUESTA LOGIN: ',resp);
+          
             this._st.set('session', JSON.stringify(resp.json()));
             localStorage.setItem('session', JSON.stringify(resp.json()));
-            this.navCtrl.setRoot(TabsPage);
+
+
+
+            if(resp.json().isNew){
+              this.navCtrl.push(UserSelectTypePage, resp.json());
+            }else{
+              this.navCtrl.setRoot(TabsPage);
+            }
           })
           .catch(err => {
             console.log('ERROR');

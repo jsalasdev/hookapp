@@ -1,0 +1,35 @@
+<!--
+  Generated template for the EditLocalTobaccoListPage page.
+  
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+    <ion-navbar>
+        <ion-title>Selecciona el tabaco</ion-title>
+    </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+    <ion-grid *ngIf="tobaccos.length>0;else elseTemplate">
+        <ion-col *ngFor="let tobacco of tobaccos" col-12 col-lg-8 offset-lg-2>
+            <ion-row>
+                <ion-label>
+                    <h3>{{tobacco.name}}</h3>
+                </ion-label>
+                <ion-checkbox [checked]="local.tobaccos.indexOf(tobacco._id)>=0" (click)="checkedOptions(tobacco._id, $event)" padding></ion-checkbox>
+
+            </ion-row>
+            <hr/>
+        </ion-col>
+    </ion-grid>
+    <ng-template #elseTemplate>
+        Error al cargar los sabores, pruebe más tarde...
+    </ng-template>
+</ion-content>
+<ion-fab right bottom>
+    <button (click)="updateTobaccos()" class="button-fab" ion-fab mini><ion-icon name="done-all"></ion-icon></button>
+</ion-fab>
